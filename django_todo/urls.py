@@ -18,10 +18,14 @@ from django.contrib import admin
 from todo import urls as urls_todo
 from accounts import urls as urls_accounts
 from home.views import index
-
+from posts import urls as urls_blog
+from django.views.static import serve
+from .settings import MEDIA_ROOT
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', index, name="index"),
     url(r'^todo/', include(urls_todo)),
     url(r'^accounts/', include(urls_accounts)),
+    url(r'^blog/', include(urls_blog)),
+    url(r'^media/(?P<path>.*)$', serve, {'document_root': MEDIA_ROOT}),
 ]

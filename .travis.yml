@@ -4,3 +4,16 @@ python:
 install: "pip install -r requirements.txt"
 script:
 - SECRET_KEY="whatever" ./manage.py test
+
+# If the travis build fails and the output is "manage.py permission denied"
+# You have to change the manage.py permission. 
+# In the terminal line enter: git ls-tree HEAD. 
+# If you see 100644 blob xxxxxxxx manage.py. 
+# The 644 isn't an excutable permission. 
+# Enter: git update-index -- chmod=+x manage.py
+# Enter: git ls-tree HEAD
+# The output will be 100755 blob xxxxxxxxx manage.py
+# git add, git commit -m"permission access for travis"
+
+# Another problem I encounter is forgetting to comment out
+# import env in the settings.py file

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<ul class="navbar-nav mr-auto">
+    <li class="nav-item active">
+        <a style="padding: 5px 10px; width: 120px;"" class=" btn btn-primary" href="{% url 'edit_blog' item.id %}">Add
+            New Blog <span class="sr-only">(current)</span></a>
+    </li>
+    <li class="nav-item active">
+        <a style="padding: 5px 10px; width: 120px;"" class=" btn btn-primary" href="{% url 'blog'  %}">Back <span class="sr-only">(current)</span></a>
+    </li>
+
+</ul>
+<div class="container">
+    <div class="jumbotron">
+        <h1 class="display-3">{{ item.title }}</h1>
+        <p class="lead">
+            <a class="btn btn-primary btn-lg" href="{{ item.id }}/edit" role="button">Edit</a>
+        </p>
+        <img style="width: 200px; height: 200px;" src="{{MEDIA_URL}}img/mazeicon2.png" alt="">
+        <hr class="my-4">
+        <p class="lead">{{ item.content }}</p>
+        <p>{{ item.created_date }}</p>
+        <p>{{ item.published_date }}</p>
+        <p>{{ item.tag }}</p>
+        <p>{{ item.views }}</p>
+    </div>
+</div>
+{% endblock %}
