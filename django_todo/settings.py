@@ -23,11 +23,17 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
-""" This should be stored as an environment variable in env.py """  # SECURITY WARNING: keep the secret key used in production secret!""""""
+""" This should be stored as an environment variable in a env.py file like the follow below.
+
+env.py file
+import os
+os.environ.setdefault("SECRET_KEY", "<Your secret key here>")
+ """
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
 
 ALLOWED_HOSTS = ['localhost']
 
@@ -146,11 +152,18 @@ STATICFILES_DIRS = [
 """If using messages in views.py for user feedback, this is required"""
 MESSAGE_STORAGE = "django.contrib.messages.storage.session.SessionStorage"
 
+
 """The set up required to reset your password"""
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-"""These are enviroment variables stored in env.py, your google email addesss and password are
-required to send an email. Make sure to import env """
+"""These are enviroment variables stored in env.py, your google email addess and password are
+required to send an email. Make sure to import env at the top of this settings.py file.
+The env.py should look similar to below.
+
+env.py file
+import os
+os.environ.setdefault("EMAIL_ADDRESS", "<Your Email address here>")
+os.environ.setdefault("EMAIL_PASSWORD", "<Your Email password here>")"""
 EMAIL_HOST_USER = os.environ.get("EMAIL_ADDRESS")
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_PASSWORD")
 EMAIL_POST = 587
