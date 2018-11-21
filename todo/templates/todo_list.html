@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Things that I need to do.</h1>
+<table>
+    {% for item in items %}
+    <tr>
+        {% if item.done %}
+        <td><strike>{{ item }}</strike></td>
+        {% else %}
+        <td style="color: {% cycle 'blue' 'green' 'red' %}">{{ item.name }}</td>
+        {% endif %}
+        <td>
+            <form method="post" action='toggle/{{ item.id }}'>
+                {% csrf_token %}
+                <input class="btn btn-primary" type="submit" value="Toggle">
+            </form>
+        </td>
+        <td>
+            <form method="GET" action='edit/{{ item.id }}'>
+                <input class="btn btn-primary" type="submit" value="Edit">
+            </form>
+        </td>
+        {% empty %}
+        <td>You have nothing</td>
+    </tr>
+    {% endfor %}
+</table>
+<a class="btn btn-primary" href="add_item">add an item</a>
+
+{% endblock%}

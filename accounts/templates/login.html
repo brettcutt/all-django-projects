@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load bootstrap_tags %}
+{% block content%}
+<h1>Login</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ login_form | as_bootstrap}}
+    <button class="btn btn-primary" type='submit'>Login</button>
+</form>
+<p>Forgot your password? <a href="{% url 'password_reset' %}">Reset Here</a></p>
+{% if messages %}
+{% for message in messages %}
+{{ message }}
+{% endfor %} {% endif %} {% endblock %}
