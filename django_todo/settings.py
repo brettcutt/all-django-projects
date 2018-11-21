@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
-import env
+#import env
 """The env.py imports environment variables, Make sure to comment out in 
 production mode and that the env.py is in the .gitignore file """
 
