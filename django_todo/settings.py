@@ -13,6 +13,9 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 #import env
+# pip install dj_database_url, This allows django to connect to the heroku database url
+# pip install psycopg2 allows django to connect to the heroku prostgres database
+import dj_database_url
 """The env.py imports environment variables, Make sure to comment out in 
 production mode and that the env.py is in the .gitignore file """
 
@@ -35,7 +38,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 DEBUG = True
 
 
-ALLOWED_HOSTS = ['localhost']
+ALLOWED_HOSTS = ['localhost', 'all-django-projects.herokuapp.com']
 
 
 # Application definition
@@ -53,6 +56,11 @@ INSTALLED_APPS = [
     'accounts',
     'home',
     'posts',
+    'products',
+    'cart',
+    'search',
+    'checkout',
+    'storages',  # pip install storages
 ]
 
 MIDDLEWARE = [
@@ -63,6 +71,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # Added with pip install whitenoise
     'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
@@ -84,6 +93,8 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 # so we can serve out our media files
                 'django.template.context_processors.media',
+                # Added when when making context items
+                'cart.context.cart_contents'
             ],
         },
     },
@@ -95,13 +106,19 @@ WSGI_APPLICATION = 'django_todo.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
 
+# dj_database_url django to connect to the heroku database url pip install dj_database_url in import dj_database_url
+if "DATABASE_URL" in os.environ:
+    DATABASES = {'default': dj_database_url.parse(
+        os.environ.get('DATABASE_URL'))}
+else:
+    print("Database URL not found. Using SQlite instead")
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -144,6 +161,26 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
+AWS_S3_OBJECT_PARAMETERS = {
+    'Expires': 'Thu, 31 Dec 2099 20:00:00 GMT',
+    'CacheControl': 'max-age=94608000',
+}
+
+AWS_STORAGE_BUCKET_NAME = 'all-django-projects'
+AWS_S3_REGION_NAME = 'ap-southeast-2'
+AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
+AWS_S2_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+
+# pip install boto3 pip install django-storages. This allows django to connect to AWS S3
+# 'storages' must be added to ALLOWED_APP
+# python manage.py collect static to send files to s3
+# This is combined with the custom_storages.py file
+# If fontawesome files are not working, in S3 CORS <AllowedMethod>HEAD</AllowedMethod> may have to be add.
+STATICFILES_LOCATION = 'static'
+STATICFILES_STORAGE = 'custom_storages.StaticStorage'
+
+
 STATIC_URL = '/static/'
 
 """If you add a static directory in your top level project directory and e.g.
@@ -153,7 +190,13 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
 
+"""Static files are collect here for Heroku """
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# To store the media files onto S3
+# This is combined with the custom_storages.py file
+MEDIAFILES_LOCATION = "media"
+DEFAULT_FILE_STORAGE = 'custom_storages.MediaStorage'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -177,3 +220,6 @@ os.environ.setdefault("EMAIL_PASSWORD", "<Your Email password here>")"""
 EMAIL_HOST_USER = os.environ.get("EMAIL_ADDRESS")
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_PASSWORD")
 EMAIL_POST = 587
+
+STRIPE_PUBLISHABLE = os.environ.get('STRIPE_PUBLISHABLE')
+STRIPE_SECRET = os.environ.get('STRIPE_SECRET')

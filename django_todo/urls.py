@@ -19,7 +19,11 @@ from todo import urls as urls_todo
 from accounts import urls as urls_accounts
 from home.views import index
 from posts import urls as urls_blog
-from django.views.static import serve
+from products import urls as urls_products
+from cart import urls as urls_cart
+from search import urls as urls_search
+from checkout import urls as urls_checkout
+from django.views import static
 from .settings import MEDIA_ROOT
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -27,5 +31,9 @@ urlpatterns = [
     url(r'^todo/', include(urls_todo)),
     url(r'^accounts/', include(urls_accounts)),
     url(r'^blog/', include(urls_blog)),
-    url(r'^media/(?P<path>.*)$', serve, {'document_root': MEDIA_ROOT}),
+    url(r'^products/', include(urls_products)),
+    url(r'^cart/', include(urls_cart)),
+    url(r'^search/', include(urls_search)),
+    url(r'^checkout/', include(urls_checkout)),
+    url(r'^media/(?P<path>.*)$', static.serve, {'document_root': MEDIA_ROOT}),
 ]

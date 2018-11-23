@@ -16,7 +16,7 @@
         <p class="lead">
             <a class="btn btn-primary btn-lg" href="{{ item.id }}/edit" role="button">Edit</a>
         </p>
-        <img style="width: 200px; height: 200px;" src="{{MEDIA_URL}}img/mazeicon2.png" alt="">
+        <img style="width: 200px; height: 200px;" src="{{ MEDIA_URL }}{{ item.image }}" alt="">
         <hr class="my-4">
         <p class="lead">{{ item.content }}</p>
         <p>{{ item.created_date }}</p>
